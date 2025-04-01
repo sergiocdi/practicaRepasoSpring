@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import practicaRepasoSpring.entidades.Categoria;
 import practicaRepasoSpring.entidades.Cliente;
 import practicaRepasoSpring.entidades.Pedido;
@@ -69,5 +70,55 @@ public class TiendaService {
             System.out.println("Pedido ID: " + p.getId() + ", Fecha: " + p.getFecha());
             p.getProductos().forEach(prod -> System.out.println("  - " + prod.getNombre()));
         });
+    }
+    
+    // Método para modificar un producto
+    @Transactional
+    public void modificarProducto(Long productoId, String nuevoNombre, double nuevoPrecio) {
+        Producto producto = productoRepo.findById(productoId).orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+        producto.setNombre(nuevoNombre);
+        producto.setPrecio(nuevoPrecio);
+        productoRepo.save(producto);
+        System.out.println("Producto modificado: " + producto.getNombre());
+    }
+
+    // Método para eliminar un producto
+    @Transactional
+    public void eliminarProducto(Long productoId) {
+        productoRepo.deleteById(productoId);
+        System.out.println("Producto eliminado con ID: " + productoId);
+    }
+
+    // Método para modificar un cliente
+    @Transactional
+    public void modificarCliente(Long clienteId, String nuevoNombre, String nuevoEmail) {
+        Cliente cliente = clienteRepo.findById(clienteId).orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+        cliente.setNombre(nuevoNombre);
+        cliente.setEmail(nuevoEmail);
+        clienteRepo.save(cliente);
+        System.out.println("Cliente modificado: " + cliente.getNombre());
+    }
+
+    // Método para eliminar un cliente
+    @Transactional
+    public void eliminarCliente(Long clienteId) {
+        clienteRepo.deleteById(clienteId);
+        System.out.println("Cliente eliminado con ID: " + clienteId);
+    }
+
+    // Método para modificar un pedido (añadir o quitar productos)
+    @Transactional
+    public void modificarPedido(Long pedidoId, List<Long> nuevosProductosIds) {
+        Pedido pedido = pedidoRepo.findById(pedidoId).orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
+        pedido.setProductos(productoRepo.findAllById(nuevosProductosIds));
+        pedidoRepo.save(pedido);
+        System.out.println("Pedido modificado con ID: " + pedidoId);
+    }
+
+    // Método para eliminar un pedido
+    @Transactional
+    public void eliminarPedido(Long pedidoId) {
+        pedidoRepo.deleteById(pedidoId);
+        System.out.println("Pedido eliminado con ID: " + pedidoId);
     }
 }
