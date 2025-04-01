@@ -114,11 +114,27 @@ public class TiendaService {
         pedidoRepo.save(pedido);
         System.out.println("Pedido modificado con ID: " + pedidoId);
     }
+    
+    public List<Producto> buscarProductosPorRangoDePrecio(double precioMin, double precioMax) {
+        return productoRepo.findByPrecioBetween(precioMin, precioMax);
+    }
 
     // Método para eliminar un pedido
     @Transactional
     public void eliminarPedido(Long pedidoId) {
         pedidoRepo.deleteById(pedidoId);
         System.out.println("Pedido eliminado con ID: " + pedidoId);
+    }
+    
+    @Transactional
+    public void listarProductosMasVendidos() {
+        List<Object[]> resultados = productoRepo.encontrarProductosMasVendidos();
+
+        System.out.println(" Productos más vendidos:");
+        for (Object[] fila : resultados) {
+            Producto producto = (Producto) fila[0];
+            Long cantidad = (Long) fila[1];
+            System.out.println(" - " + producto.getNombre() + " | Vendido: " + cantidad + " veces");
+        }
     }
 }

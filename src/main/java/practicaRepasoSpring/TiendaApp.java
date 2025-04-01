@@ -7,6 +7,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import practicaRepasoSpring.entidades.Producto;
 import practicaRepasoSpring.servicios.TiendaService;
 
 
@@ -28,6 +29,8 @@ public class TiendaApp implements CommandLineRunner {
 
         tiendaService.crearProducto("Laptop", 900, 1L);
         tiendaService.crearProducto("Camiseta", 20, 2L);
+
+        tiendaService.crearProducto("Camiseta", 90, 1L);
 
         tiendaService.crearCliente("Juan Pérez", "juan@mail.com");
         tiendaService.crearCliente("María Gómez", "maria@mail.com");
@@ -53,7 +56,18 @@ public class TiendaApp implements CommandLineRunner {
         // Consultas después de modificar
         System.out.println("Productos después de modificaciones:");
         tiendaService.listarProductosPorCategoria("Electrónica");
+        
+        System.out.println("Productos en el rango de precio 50 - 1000:");
+        List<Producto> productosEnRango = tiendaService.buscarProductosPorRangoDePrecio(50, 1000);
 
+        for (Producto p : productosEnRango) {
+            System.out.println(" - " + p.getNombre() + " | Precio: " + p.getPrecio());
+        }
+
+        
+        System.out.println("\n Listando los productos más vendidos:");
+        tiendaService.listarProductosMasVendidos();
+        
         // Eliminar un pedido
      //   tiendaService.eliminarPedido(2L);
       //  tiendaService.eliminarPedido(2L);
